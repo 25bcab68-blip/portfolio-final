@@ -29,8 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const form = document.getElementById("contactForm");
 
-  if (!form) return;
-
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
@@ -41,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
 
       const response = await fetch(
-        "https://portfolio-final-6nvr.onrender.com/api/contact",
+        "https://portfolio-final-82gv.onrender.com/api/contact",
         {
           method: "POST",
           headers: {
