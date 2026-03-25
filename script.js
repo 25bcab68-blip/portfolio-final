@@ -1,9 +1,15 @@
 // Smooth scroll
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener("click", function(e) {
+  anchor.addEventListener("click", function (e) {
     e.preventDefault();
-    document.querySelector(this.getAttribute("href"))
-      .scrollIntoView({ behavior: "smooth" });
+
+    const target = document.querySelector(this.getAttribute("href"));
+
+    if (target) {
+      target.scrollIntoView({
+        behavior: "smooth"
+      });
+    }
   });
 });
 
@@ -11,40 +17,57 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 window.addEventListener("scroll", () => {
   document.querySelectorAll(".reveal").forEach(el => {
     const top = el.getBoundingClientRect().top;
+
     if (top < window.innerHeight - 100) {
       el.classList.add("active");
     }
   });
 });
 
-// ✅ FIXED FORM SUBMIT
-document.getElementById("contactForm").addEventListener("submit", async function(e){
-  e.preventDefault();
+// Contact Form Submit
+document.addEventListener("DOMContentLoaded", () => {
 
-  const name = this.name.value;
-  const email = this.email.value;
-  const message = this.message.value;
+  const form = document.getElementById("contactForm");
 
-  try {
-    const response = await fetch("https://portfolio-final-6nvr.onrender.com/api/contact", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ name, email, message })
-    });
+  if (!form) return;
 
-    const data = await response.json();
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-    if (response.ok) {
-      alert("Message Sent Successfully 🚀");
-      this.reset();
-    } else {
-      alert(data.error || "Server error");
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const message = document.getElementById("message").value.trim();
+
+    try {
+
+      const response = await fetch(
+        "https://portfolio-final-6nvr.onrender.com/api/contact",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            message
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Message Sent Successfully 🚀");
+        form.reset();
+      } else {
+        alert(data.message || "Server Error ❌");
+      }
+
+    } catch (error) {
+      console.log(error);
+      alert("Backend not connected ❌");
     }
+  });
 
-  } catch (err) {
-    console.error(err);
-    alert("Backend not connected ❌");
-  }
 });
